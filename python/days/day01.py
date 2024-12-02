@@ -35,6 +35,20 @@ def part_2():
         return total
 
 
+def part_2_alt():
+    with open("inputs/day01.txt", "r") as f:
+        total = 0
+        l = []
+        r = []
+        for line in f.readlines():
+            nums = utils.ints(line)
+            l.append(nums[0])
+            r.append(nums[1])
+        for a in l:
+            total += a * r.count(a)
+        return total
+
+
 if __name__ == "__main__":
     print(f"Part 1: {part_1()}")
     print(f"Part 1 (alternate): {part_1_alt()}")
