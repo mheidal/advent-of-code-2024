@@ -20,7 +20,7 @@ class RunType(Enum):
 
 def main():
     run_type: RunType = RunType.SPECIFIC
-    specific = 1
+    specific = 2
     up_to = 1
     timed = True
     should_print_answers = True
