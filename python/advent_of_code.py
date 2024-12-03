@@ -14,13 +14,13 @@ def enable_print():
 
 class RunType(Enum):
     ALL = 0
-    SPECIFIC = 2
-    UP_TO = 3
+    SPECIFIC = 1
+    UP_TO = 2
 
 
 def main():
     run_type: RunType = RunType.SPECIFIC
-    specific = 2
+    specific = 3
     up_to = 1
     timed = True
     should_print_answers = True

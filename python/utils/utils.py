@@ -15,6 +15,12 @@ def floats(s: str) -> List[int]:
 def stripped_lines(f: TextIOWrapper):
     return [line.strip() for line in f.readlines()]
 
+def prod(vals: list[int | float]):
+    product = 1
+    for a in vals:
+        product *= a
+    return product
+
 class com:
     """Complex numbers representing 2-dimensional coordinates."""
     # x: real. y: imag.
