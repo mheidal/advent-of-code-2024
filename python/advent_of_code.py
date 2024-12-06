@@ -16,10 +16,11 @@ class RunType(Enum):
     ALL = 0
     SPECIFIC = 1
     UP_TO = 2
+    TODAY = 3
 
 
 def main():
-    run_type: RunType = RunType.SPECIFIC
+    run_type: RunType = RunType.TODAY
     specific = 5
     up_to = 1
     timed = True
@@ -40,6 +41,9 @@ def main():
             days_to_run = [days[specific - 1]]
         case RunType.UP_TO:
             days_to_run = days[:up_to+1]
+        case RunType.TODAY:
+            today = datetime.today().day
+            days_to_run = [days[today]] # Advent of Code releases day n on the n-1th day of December for me
         case _:
             raise ValueError()
 
