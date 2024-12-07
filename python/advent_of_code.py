@@ -21,7 +21,7 @@ class RunType(Enum):
 
 def main():
     run_type: RunType = RunType.TODAY
-    specific = 5
+    specific = 6
     up_to = 1
     timed = True
     should_print_answers = True

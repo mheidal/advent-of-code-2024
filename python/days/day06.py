@@ -22,7 +22,7 @@ def part_1():
     with open("inputs/day06.txt", "r") as f:
         blockages = set()
         pos = utils.com.zero
-        face = -1j
+        face = utils.com.u
         height = 0
         width = 0
         for i, line in enumerate(f.readlines()):
@@ -38,6 +38,7 @@ def part_1():
             visited.add(pos)
             if pos + face in blockages:
                 face *= utils.com.rotation_right
+                continue
             pos += face
         return len(visited)
 
