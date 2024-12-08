@@ -21,6 +21,14 @@ def prod(vals: list[int | float]):
         product *= a
     return product
 
+def grid_width_height(grid: str) -> tuple[list[list[str]], int, int]:
+    lines = grid.splitlines()
+    height = len(lines)
+    width = max(len(row) for row in lines) if height > 0 else 0
+    lines = [[c for c in line] for line in lines]
+    return lines, width, height
+
+
 class com:
     """Complex numbers representing 2-dimensional coordinates."""
     # x: real. y: imag.
