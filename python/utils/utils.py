@@ -22,6 +22,10 @@ def prod(vals: list[int | float]):
     return product
 
 def grid_width_height(grid: str) -> tuple[list[list[str]], int, int]:
+    """
+    Turn a 2-dimensional grid of single characters, with rows separated by newlines,
+    into a list of lists of single characters, along with the grid's width and height.
+    """
     lines = grid.splitlines()
     height = len(lines)
     width = max(len(row) for row in lines) if height > 0 else 0
