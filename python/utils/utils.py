@@ -21,9 +21,9 @@ def prod(vals: list[int | float]):
         product *= a
     return product
 
-def print_if_zero_mod(a, m):
-    if a % m == 0:
-        print(a)
+def print_if_zero_mod(value: int, modulo: int):
+    if value % modulo == 0:
+        print(value)
 
 def grid_width_height(grid: str) -> tuple[list[list[str]], int, int]:
     """

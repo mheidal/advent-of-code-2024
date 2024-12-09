@@ -5,32 +5,31 @@ from utils import utils
 
 def part_1():
     with open("inputs/day09.txt", "r") as f:
-        mem = []
+        memory = []
         id = 0
-        for i, c in enumerate(f.read()):
-            for _ in range(int(c)):
-                if i % 2 == 0:
-                    mem.append(id)
+        for index, size in enumerate(f.read()):
+            for _ in range(int(size)):
+                if index % 2 == 0:
+                    memory.append(id)
                 else:
-                    mem.append(None)
-            if i % 2 == 0:
+                    memory.append(None)
+            if index % 2 == 0:
                 id += 1
-        l = 0
-        r = len(mem) - 1
+        left = 0
+        right = len(memory) - 1
         while True:
-            # disp_mem(mem)
-            while mem[l] is not None:
-                l += 1
-            while mem[r] is None:
-                r -= 1
-            if l >= r:
+            while memory[left] is not None:
+                left += 1
+            while memory[right] is None:
+                right -= 1
+            if left >= right:
                 break
-            mem[l] = mem[r]
-            mem[r] = None
+            memory[left] = memory[right]
+            memory[right] = None
         total = 0
-        for ix, val in enumerate(mem):
+        for ix, val in enumerate(memory):
             if val is None:
-                break
+                continue
             total += val * ix
         return total
 
@@ -41,7 +40,6 @@ def part_1_alt():
 
 
 def part_2():
-    pass
     with open("inputs/day09.txt", "r") as f:
         mem = []
         id = 0
@@ -78,7 +76,6 @@ def part_2():
                         mem[start_file:end_file] = [None] * file_size
                         break
             next_id_to_target -= 1
-            # utils.print_if_zero_mod(next_id_to_target, 100)
 
         total = 0
         for ix, val in enumerate(mem):
@@ -97,7 +94,7 @@ class MemoryType(Enum):
         return self.__repr__()
 
 @dataclass
-class MemoryRange:
+class MemorySpace:
     size: int
     contents: int | MemoryType
 
@@ -109,55 +106,51 @@ class MemoryRange:
 
 def part_2_alt():
     with open("inputs/day09.txt", "r") as f:
-        mem: list[MemoryRange] = []
-        id_to_file: dict[int, MemoryRange] = {}
+        memory: list[MemorySpace] = []
         id = 0
         for space_index, c in enumerate(f.read()):
             if c == "0":
                 continue
             if space_index % 2 == 0:
-                file = MemoryRange(int(c), id)
-                id_to_file[id] = file
-                mem.append(file)
+                file = MemorySpace(int(c), id)
+                memory.append(file)
                 id += 1
             else:
-                mem.append(MemoryRange(int(c), MemoryType.FREE))
-        
-        # to make sure that we always have a bit of memory to the right to make checking surrounding values simpler
-        mem.append(MemoryRange(1, MemoryType.FREE))
+                memory.append(MemorySpace(int(c), MemoryType.FREE))
 
         next_id_to_target = id - 1
+        targeted_file_index = len(memory) - 1
         while next_id_to_target >= 0:
-            file = id_to_file[next_id_to_target]
-            old_index = mem.index(file)
-            for space_index, space in enumerate(mem):
-                if space_index == old_index:
+            while targeted_file_index >= len(memory) or memory[targeted_file_index].contents != next_id_to_target:
+                targeted_file_index -= 1
+            file = memory[targeted_file_index]
+            for space_index, space in enumerate(memory):
+                if space_index == targeted_file_index:
                     break
                 elif space.contents == MemoryType.FREE and space.size >= file.size:
-                    if mem[old_index - 1].contents == MemoryType.FREE:
-                        if mem[old_index + 1].contents == MemoryType.FREE:
-                            mem[old_index - 1].size += file.size + mem[old_index + 1].size
-                            mem.pop(old_index + 1)
-                        else:
-                            mem[old_index - 1].size += file.size
-                        mem.pop(old_index)
-                    else:
-                        if mem[old_index + 1].contents == MemoryType.FREE:
-                            mem[old_index + 1].size += file.size
-                            mem.pop(old_index)
-                        else:
-                            mem[old_index] = MemoryRange(file.size, MemoryType.FREE)
+                    # convert old space into free, squashing adjacent free spaces together
+                    # doing this at every step means we are guaranteed to not need to check
+                    # more than one space before the old space
+                    memory[targeted_file_index] = MemorySpace(file.size, MemoryType.FREE)
+                    free_index = targeted_file_index
+                    if memory[targeted_file_index - 1].contents == MemoryType.FREE:
+                        free_index -= 1
+                    while free_index < len(memory) - 1 and memory[free_index + 1].contents == MemoryType.FREE:
+                        memory[free_index].size += memory[free_index + 1].size
+                        memory.pop(free_index + 1)
+
+                    # convert new space into file
                     space.size -= file.size
                     if space.size == 0:
-                        mem[space_index] = file
+                        memory[space_index] = file
                     else:
-                        mem.insert(space_index, file)
+                        memory.insert(space_index, file)
                     break
             next_id_to_target -= 1
 
         total = 0
         index = 0
-        for memory_space in mem:
+        for memory_space in memory:
             if memory_space.contents == MemoryType.FREE:
                 index += memory_space.size
             else:
