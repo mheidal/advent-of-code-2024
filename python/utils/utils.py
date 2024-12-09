@@ -21,6 +21,10 @@ def prod(vals: list[int | float]):
         product *= a
     return product
 
+def print_if_zero_mod(a, m):
+    if a % m == 0:
+        print(a)
+
 def grid_width_height(grid: str) -> tuple[list[list[str]], int, int]:
     """
     Turn a 2-dimensional grid of single characters, with rows separated by newlines,
