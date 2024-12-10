@@ -135,7 +135,7 @@ def part_2_alt():
                     free_index = targeted_file_index
                     if memory[targeted_file_index - 1].contents == MemoryType.FREE:
                         free_index -= 1
-                    while free_index < len(memory) - 1 and memory[free_index + 1].contents == MemoryType.FREE:
+                    while free_index + 1 < len(memory) and memory[free_index + 1].contents == MemoryType.FREE:
                         memory[free_index].size += memory[free_index + 1].size
                         memory.pop(free_index + 1)
 
