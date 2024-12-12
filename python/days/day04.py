@@ -14,7 +14,6 @@ def part_1():
             for i in range(len(row)):
                 if i < len(row) - 3:
                     if (row[i] + row[i+1] + row[i+2] + row[i+3] in ["XMAS", "SAMX"]):
-                        print("a")
                         total += 1
         transposed = []
         for _ in range(len(grid[0])):
@@ -28,14 +27,12 @@ def part_1():
             for i in range(len(row)):
                 if i < len(row) - 3:
                     if (row[i] + row[i+1] + row[i+2] + row[i+3] in ["XMAS", "SAMX"]):
-                        print("b")
                         total += 1
 
         for i, row in enumerate(grid):
             for j, col in enumerate(row):
                 if i < len(grid) - 3 and j < len(row) - 3:
                     if grid[i + 0][j + 0] + grid[i + 1][j + 1] + grid[i + 2][j + 2] + grid[i + 3][j + 3] in ["XMAS", "SAMX"]:
-                        print("c")
                         total += 1
         for i, row in enumerate(grid):
             grid[i] = row[::-1]
@@ -43,7 +40,6 @@ def part_1():
             for j, col in enumerate(row):
                 if i < len(grid) - 3 and j < len(row) - 3:
                     if grid[i + 0][j + 0] + grid[i + 1][j + 1] + grid[i + 2][j + 2] + grid[i + 3][j + 3] in ["XMAS", "SAMX"]:
-                        print("d")
                         total += 1
         return total
 

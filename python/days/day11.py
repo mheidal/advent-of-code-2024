@@ -6,6 +6,7 @@ from utils import utils
 
 
 def part_1():
+    return
     with open("inputs/day11.txt", "r") as f:
         stones = f.read().split()
         for _ in range(25):
@@ -29,29 +30,28 @@ def part_1():
 
 
 @lru_cache(maxsize=None)
-def get_successors(stone) -> tuple[str] | tuple[str, str]:
+def get_successor_stones(stone) -> list[str]:
     if stone == '0':
-        return ('1',)
+        return ['1']
     elif len(stone) % 2 == 0:
-        return stone[:len(stone) // 2], str(int(stone[len(stone) // 2:]))
+        return [stone[:len(stone) // 2], str(int(stone[len(stone) // 2:]))]
     else:
-        return (str(2024 * int(stone)),)
+        return [str(2024 * int(stone))]
 
 
 def get_stone_count(step_count):
     text: str
     with open("inputs/day11.txt", "r") as f:
         text = f.read()
-    current = Counter(text.split())
-    prox = Counter()
+    current_stones = Counter(text.split())
+    next_stones = Counter()
     for _ in range(step_count):
-        for stone, count in current.items():
-            successors = get_successors(stone)
-            for successor in successors:
-                prox[successor] += count
-        current = prox
-        prox = Counter()
-    return sum(current.values())
+        for stone, count in current_stones.items():
+            for successor in get_successor_stones(stone):
+                next_stones[successor] += count
+        current_stones = next_stones
+        next_stones = Counter()
+    return sum(current_stones.values())
 
 
 def part_1_alt():
