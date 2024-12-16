@@ -142,7 +142,7 @@ class Cell:
     def __init__(self, row: int, col: int):
         self.row = row
         self.col = col
-    
+
     @classmethod
     def convert(cls, value):
         if isinstance(value, cls):
@@ -265,7 +265,7 @@ class Grid:
         adj = []
         for d in Directions.ortho_directions():
             cell: Cell = index + d
-            if allow_outside_grid or (0 <= cell.row < self.height and 0 <= cell.col < self.width):
+            if allow_outside_grid or self.cell_is_within_grid(cell):
                 adj.append(cell)
         return adj
     
@@ -274,9 +274,12 @@ class Grid:
         adj = []
         for d in Directions.full_directions():
             cell: Cell = index + d
-            if allow_outside_grid or (0 <= cell.row < self.height and 0 <= cell.col < self.width):
+            if allow_outside_grid or self.cell_is_within_grid(cell):
                 adj.append(cell)
         return adj
+    
+    def cell_is_within_grid(self, index: Cell) -> bool:
+        return (0 <= index.row < self.height and 0 <= index.col < self.width)
     
     def coord_of_first_occurrance(self, value: str) -> Cell:
         for cell, v in self:
