@@ -253,39 +253,12 @@ class Grid:
         """Tuples are (row, col), i.e. (y, x)"""
         cell = Cell.convert(index)
         self.grid[cell.row][cell.col] = value
-        
+
     def __iter__(self) -> Iterator[tuple[Cell, str]]:
         for r, row in enumerate(self.grid):
             for c, col in enumerate(row):
                 coord = Cell(r, c)
                 yield (coord, col)
-
-    def ortho_adj(self, index: GridIndex, *, allow_outside_grid=False) -> list[tuple[Cell, str]]:
-        cell = Cell.convert(index)
-        adj = []
-        for d in Directions.ortho_directions():
-            cell: Cell = index + d
-            if allow_outside_grid or self.cell_is_within_grid(cell):
-                adj.append(cell)
-        return adj
-    
-    def full_adj(self, index: GridIndex, *, allow_outside_grid=False) -> list[tuple[Cell, str]]:
-        cell = Cell.convert(index)
-        adj = []
-        for d in Directions.full_directions():
-            cell: Cell = index + d
-            if allow_outside_grid or self.cell_is_within_grid(cell):
-                adj.append(cell)
-        return adj
-    
-    def cell_is_within_grid(self, index: Cell) -> bool:
-        return (0 <= index.row < self.height and 0 <= index.col < self.width)
-    
-    def coord_of_first_occurrance(self, value: str) -> Cell:
-        for cell, v in self:
-            if v == value:
-                return cell
-
 
     def __repr__(self):
         s = ""
@@ -295,29 +268,32 @@ class Grid:
             s += "\n"
         s = s[:-1]
         return s
-    
+
     def __str__(self):
         return self.__repr__()
 
+    def ortho_adj(self, index: GridIndex, *, allow_outside_grid=False) -> list[tuple[Cell, str]]:
+        cell = Cell.convert(index)
+        adj = []
+        for d in Directions.ortho_directions():
+            cell: Cell = index + d
+            if allow_outside_grid or self.cell_is_within_grid(cell):
+                adj.append(cell)
+        return adj
 
-if __name__ == "__main__":
-    s = "abc\ndef\nghi"
-    g = Grid(s)
-    print(g)
-    print()
-    print(g[(0, 0)])
-    print()
-    g[(0, 0)] = 'x'
-    print(g)
-    print()
-    g[Cell(0, 1)] = 'y'
-    print(g)
-    print()
-    g[2 + 0j] = 'z'
-    print(g)
-    print()
-    # for cell, val in g:
-    #     print(f"{cell}: {val}")
-    for adj in g.ortho_adj((1, 1)):
-        print(f"{adj}: {g[adj]}")
+    def full_adj(self, index: GridIndex, *, allow_outside_grid=False) -> list[tuple[Cell, str]]:
+        cell = Cell.convert(index)
+        adj = []
+        for d in Directions.full_directions():
+            cell: Cell = index + d
+            if allow_outside_grid or self.cell_is_within_grid(cell):
+                adj.append(cell)
+        return adj
 
+    def cell_is_within_grid(self, index: Cell) -> bool:
+        return (0 <= index.row < self.height and 0 <= index.col < self.width)
+
+    def coord_of_first_occurrance(self, value: str) -> Cell:
+        for cell, v in self:
+            if v == value:
+                return cell
