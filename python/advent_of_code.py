@@ -21,7 +21,7 @@ class RunType(Enum):
 
 def main():
     run_type: RunType = RunType.SPECIFIC
-    specific = 11
+    specific = 13
     up_to = 1
     timed = True
     should_print_answers = True
@@ -30,7 +30,8 @@ def main():
     for i in range(1, 26):
         try:
             days.append(importlib.import_module(f"days.day{i:02d}"))
-        except ImportError as _:
+        except ImportError as err:
+            print(f"Could not import day {i}: {err}")
             continue
 
     days_to_run = None

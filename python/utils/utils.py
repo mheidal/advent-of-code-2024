@@ -23,7 +23,7 @@ def prod(vals: list[int | float]):
 
 def print_if_zero_mod(value: int, modulo: int):
     if value % modulo == 0:
-        print(value)
+        print(f"{value:,}")
 
 def grid_width_height(grid: str) -> tuple[list[list[str]], int, int]:
     """
