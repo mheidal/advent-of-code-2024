@@ -1,7 +1,8 @@
+from dataclasses import dataclass
 from io import TextIOWrapper
 import math
 import re
-from typing import Iterable, List
+from typing import Any, Iterable, Iterator, List, Self, TypeAlias, TypeVar
 
 def ints_nonneg(s: str) -> List[int]:
     return [int(i) for i in re.findall("\\d+", s)]
@@ -110,3 +111,210 @@ class com:
         hi_real = int(max(s, key=lambda x: x.real).real)
 
         return (lo_real - margin + ((lo_imag - margin) * 1j), hi_real + margin + 1 + ((hi_imag + margin + 1) * 1j))
+
+    # requirements:
+    # - index using complexes
+    # - index using tuples of ints
+    # - index using Cell object (dataclass with x, y, r=y, c=x)
+    # - get full adjacency
+    # - get ortho adjacency
+    # - iterate: for (row, col), val in grid:
+    # - access height/width
+    # - initialize from a string (newlines separating rows, one value per char)
+    # - cells should have some nice features
+    #   - A + B = (A.x + B.x, A.y + B.y)
+    #   - A * Cell.rotation_right is a rotation by 90 degrees clockwise
+    #   - 
+    # - Should be able to easily mark cells as being in sets
+    #   - This might be as simple as a has_val function? has_val(p, "#")?
+    # - Easy setting of values by Cell/complex/int tuple
+    # - Manhattan distance between cells
+    # - Separation between Direction and Cell? Direction being a rename of cell for clarity?
+
+class Cell:
+    """
+    A 2-dimensional point with integer coordinates.
+    Represented as a tuple with the row (or y-value) first and the column (or x-value) second.
+    """
+    row: int
+    col: int
+
+    def __init__(self, row: int, col: int):
+        self.row = row
+        self.col = col
+    
+    @classmethod
+    def convert(cls, value):
+        if isinstance(value, cls):
+            return value
+        if isinstance(value, tuple):
+            return cls(*value)
+        raise TypeError(f"Cannot convert {type(value)} to Cell")
+
+    @property
+    def y(self):
+        return self.row
+
+    @property
+    def x(self):
+        return self.col
+
+    def __repr__(self):
+        return f"({self.y},{self.x})"
+    
+    def __str__(self):
+        return self.__repr__()
+    
+    def __eq__(self, other: Self):
+        return self.row == other.row and self.col == other.col
+    
+    def __hash__(self):
+        return hash((self.row, self.col))
+    
+    def __add__(self, other: Self) -> Self:
+        return Cell(self.row + other.row, self.col + other.col)
+    
+    def __sub__(self, other: Self) -> Self:
+        return Cell(self.row - other.row, self.col - other.col)
+    
+    def __mul__(self, other: int) -> Self:
+        if not isinstance(other, int):
+            raise ValueError(f"Invalid coefficient: {other}")
+        return Cell(self.row * other, self.col * other)
+
+    def rotate_left(self) -> Self:
+        return Direction(+1 * self.x, -1 * self.y)
+
+    def rotate_right(self) -> Self:
+        return Direction(-1 * self.x, +1 * self.y)
+
+Direction: TypeAlias = Cell
+
+class Directions:
+    zero: Cell = Cell(0, 0)
+    u: Direction = Cell(-1, +0)
+    d: Direction = Cell(+1, +0)
+    l: Direction = Cell(+0, -1)
+    r: Direction = Cell(+0, +1)
+    ul = u + l
+    ur = u + r
+    dl = d + l
+    dr = d + r
+
+    def ortho_directions() -> List[Cell]:
+        return [
+            Directions.u,
+            Directions.d,
+            Directions.l,
+            Directions.r,
+        ]
+    
+    def full_directions() -> List[Cell]:
+        return [
+            Directions.ul,
+            Directions.u,
+            Directions.ur,
+            Directions.l,
+            Directions.r,
+            Directions.dl,
+            Directions.d,
+            Directions.dr,
+        ]
+
+
+GridIndex = Cell | tuple[int, int]
+
+class Grid:
+    
+    grid: list[list[str]]
+    height: int
+    width: int
+
+    def __init__(self, s: str):
+        self.grid = []
+        height = 0
+        width = 0
+        for r, row in enumerate(s.splitlines()):
+            row_item = []
+            for c, col in enumerate(row):
+                height = max(height, r + 1)
+                width = max(width, c + 1)
+                row_item.append(col)
+            self.grid.append(row_item)
+        self.height = height
+        self.width = width
+
+    def __getitem__(self, index: GridIndex):
+        """Tuples are (row, col) or (y, x)"""
+        cell = Cell.convert(index)
+        return self.grid[cell.row][cell.col]
+
+    def __setitem__(self, index: GridIndex, value: str):
+        """Tuples are (row, col), i.e. (y, x)"""
+        cell = Cell.convert(index)
+        self.grid[cell.row][cell.col] = value
+        
+    def __iter__(self) -> Iterator[tuple[Cell, str]]:
+        for r, row in enumerate(self.grid):
+            for c, col in enumerate(row):
+                coord = Cell(r, c)
+                yield (coord, col)
+
+    def ortho_adj(self, index: GridIndex, *, allow_outside_grid=False) -> list[tuple[Cell, str]]:
+        cell = Cell.convert(index)
+        adj = []
+        for d in Directions.ortho_directions():
+            cell: Cell = index + d
+            if allow_outside_grid or (0 <= cell.row < self.height and 0 <= cell.col < self.width):
+                adj.append(cell)
+        return adj
+    
+    def full_adj(self, index: GridIndex, *, allow_outside_grid=False) -> list[tuple[Cell, str]]:
+        cell = Cell.convert(index)
+        adj = []
+        for d in Directions.full_directions():
+            cell: Cell = index + d
+            if allow_outside_grid or (0 <= cell.row < self.height and 0 <= cell.col < self.width):
+                adj.append(cell)
+        return adj
+    
+    def coord_of_first_occurrance(self, value: str) -> Cell:
+        for cell, v in self:
+            if v == value:
+                return cell
+
+
+    def __repr__(self):
+        s = ""
+        for row in self.grid:
+            for col in row:
+                s += col
+            s += "\n"
+        s = s[:-1]
+        return s
+    
+    def __str__(self):
+        return self.__repr__()
+
+
+if __name__ == "__main__":
+    s = "abc\ndef\nghi"
+    g = Grid(s)
+    print(g)
+    print()
+    print(g[(0, 0)])
+    print()
+    g[(0, 0)] = 'x'
+    print(g)
+    print()
+    g[Cell(0, 1)] = 'y'
+    print(g)
+    print()
+    g[2 + 0j] = 'z'
+    print(g)
+    print()
+    # for cell, val in g:
+    #     print(f"{cell}: {val}")
+    for adj in g.ortho_adj((1, 1)):
+        print(f"{adj}: {g[adj]}")
+
