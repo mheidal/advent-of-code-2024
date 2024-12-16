@@ -1,5 +1,4 @@
 from utils import utils
-from colorama import Fore, Style, init
 
 
 def part_1():
@@ -10,7 +9,6 @@ def part_1():
     boxes: set[complex] = set()
     robot: complex
     board, inputs = text.split("\n\n")
-    grid, width, height = utils.grid_width_height(board)
     for y, row in enumerate(board.splitlines()):
         for x, col in enumerate(row):
             point = utils.com.from_row_col(y, x)
@@ -21,7 +19,6 @@ def part_1():
                     boxes.add(point)
                 case "@":
                     robot = point
-    s = ""
     for c in inputs:
         d: complex
         match c:
@@ -45,20 +42,6 @@ def part_1():
             if robot in boxes:
                 boxes.remove(robot)
                 boxes.add(cur)
-    
-    # for row in range(height):
-    #     for col in range(width):
-    #         point = utils.com.from_row_col(row, col)
-    #         if point == robot:
-    #             s += f"{Fore.GREEN}@{Fore.RESET}"
-    #         elif point in boxes:
-    #             s += f"{Fore.BLUE}O{Fore.RESET}"
-    #         elif point in walls:
-    #             s += f"{Fore.RED}#{Fore.RESET}"
-    #         else:
-    #             s += "."
-    #     s += "\n"
-    # print(s)
     total = 0
     for box in boxes:
         total += 100 * int(box.imag) + int(box.real)
@@ -66,7 +49,6 @@ def part_1():
 
 
 def part_2():
-    init()
     with open("inputs/day15.txt", "r") as f:
         text = f.read()
     walls: set[complex] = set()
@@ -96,7 +78,7 @@ def part_2():
                 case "@":
                     robot = point_left
 
-    for i, c in enumerate(inputs):
+    for c in inputs:
         d: complex
         match c:
             case "^":
@@ -112,11 +94,13 @@ def part_2():
         curs: list[complex] = [robot]
         # old pair of linked box locations, new pair of linked box locations
         touched_boxes: list[tuple[tuple[complex, complex], tuple[complex, complex]]] = []
-        # cur: complex = robot
-        while all(cur == robot or cur in boxes for cur in curs):
+        while any(cur == robot or cur in boxes for cur in curs):
             boxes_touched_this_step = set()
             next_curs = []
             for cur in curs:
+                if not (cur == robot or cur in boxes):
+                    next_curs.append(cur)
+                    continue
                 next_location = cur + d
                 if next_location in boxes:
                     if next_location not in boxes_touched_this_step:
@@ -147,30 +131,11 @@ def part_2():
                 del box_links[old_b]
                 box_links[new_a] = new_b
                 box_links[new_b] = new_a
-        s = f"{i}: {c}\n"
-        for row in range(height):
-            for col in range(width):
-                point = utils.com.from_row_col(row, col)
-                if point == robot:
-                    s += f"{Fore.GREEN}{c}{Fore.RESET}"
-                elif point in boxes:
-                    if box_links[point] == point + utils.com.r:
-                        s += f"{Fore.BLUE}[{Fore.RESET}"
-                    else:
-                        s += f"{Fore.BLUE}]{Fore.RESET}"
-                elif point in walls:
-                    s += f"{Fore.RED}#{Fore.RESET}"
-                else:
-                    s += "."
-            s += "\n"
-        print(s)
-        input()
-        # if i > 600:
-        #     print(s)
 
-    
     total = 0
     for box in boxes:
+        if box_links[box] == box + utils.com.l:
+            continue
         total += 100 * int(box.imag) + int(box.real)
     return total
 
