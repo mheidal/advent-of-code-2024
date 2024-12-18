@@ -67,19 +67,19 @@ def part_2():
     #     and checking if that output matches the part of the program we were trying to generate.
     # Notably, the values of B and C at the end of one loop have no impact on the next loop, so we can ignore them and 
     #     simply setting them to 0, 0 at the beginning of each check.
-    def recursively_try_3_bits(instruction_index: int = 0, A: int = 0) -> int | None:
-        if instruction_index == len(instructions):
+    def recursively_try_3_bits(instruction_index: int = len(instructions) - 1, A: int = 0) -> int | None:
+        if instruction_index < 0:
             return A
         A *= 8
         valid_octals = [
             a for a in range(8)
-            if run_computer(instructions, (A + a, 0, 0), allow_jump=False)[0] == instructions[-1 * (1 + instruction_index)]
+            if run_computer(instructions, (A + a, 0, 0), allow_jump=False)[0] == instructions[instruction_index]
         ]
         for valid_octal in valid_octals:
-            if (result := recursively_try_3_bits(instruction_index+1, A + valid_octal)) is not None:
+            if (result := recursively_try_3_bits(instruction_index - 1, A + valid_octal)) is not None:
                 return result
         return None
-    
+
     return recursively_try_3_bits()
 
 
