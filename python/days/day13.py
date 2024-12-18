@@ -19,7 +19,7 @@ def part_1():
                 continue
             if (b_press := (dx // bx)) == dy // by:
                 cost = 3 * a_press + b_press
-                print(f"A: {a_press}, B: {b_press}, cost: {cost}")
+                # print(f"A: {a_press}, B: {b_press}, cost: {cost}")
                 best_cost = min(cost, best_cost)
         if best_cost < float('inf'):
             total_cost += best_cost

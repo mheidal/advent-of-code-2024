@@ -6,7 +6,6 @@ from utils import utils
 
 
 def part_1():
-    return
     with open("inputs/day11.txt", "r") as f:
         stones = f.read().split()
         for _ in range(25):

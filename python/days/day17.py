@@ -66,7 +66,7 @@ def part_2():
     # We check this by recursively trying new values for A and running the computer for one loop (until it outputs once)
     #     and checking if that output matches the part of the program we were trying to generate.
     # Notably, the values of B and C at the end of one loop have no impact on the next loop, so we can ignore them and 
-    #     simply setting them to 0, 0 at the beginning of each check.
+    #     simply set them to 0, 0 at the beginning of each check.
     def recursively_try_3_bits(instruction_index: int = len(instructions) - 1, A: int = 0) -> int | None:
         if instruction_index < 0:
             return A

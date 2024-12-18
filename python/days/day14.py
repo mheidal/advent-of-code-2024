@@ -57,15 +57,15 @@ def part_2():
         robot.y = (robot.y + robot.vy * steps) % HEIGHT
         locations.update([(robot.x, robot.y)])
 
-    s = ""
-    for row in range(HEIGHT):
-        s += f"{steps}: "
-        for col in range(WIDTH):
-            if (col, row) not in locations:
-                s += "  "
-            else:
-                s += "██"
-        s += "\n"
-    print(s)
+    # s = ""
+    # for row in range(HEIGHT):
+    #     s += f"{steps}: "
+    #     for col in range(WIDTH):
+    #         if (col, row) not in locations:
+    #             s += "  "
+    #         else:
+    #             s += "██"
+    #     s += "\n"
+    # print(s)
 
     return steps
