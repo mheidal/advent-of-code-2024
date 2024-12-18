@@ -64,9 +64,3 @@ def part_2():
                 all_pages_in_update.sort(key=functools.cmp_to_key(cmp))
                 total += int(all_pages_in_update[len(all_pages_in_update)//2])
         return total
-
-
-if __name__ == "__main__":
-    print(f"Part 1: {part_1()}")
-    print(f"Part 2: {part_2()}")
-

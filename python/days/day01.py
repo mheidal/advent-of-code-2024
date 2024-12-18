@@ -47,10 +47,3 @@ def part_2_alt():
         for a in l:
             total += a * r.count(a)
         return total
-
-
-if __name__ == "__main__":
-    print(f"Part 1: {part_1()}")
-    print(f"Part 2: {part_2()}")
-    print(f"Part 2 (alternate): {part_2_alt()}")
-

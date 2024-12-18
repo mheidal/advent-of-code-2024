@@ -138,15 +138,3 @@ def part_2():
             continue
         total += 100 * int(box.imag) + int(box.real)
     return total
-
-
-def part_2_alt():
-    with open("inputs/day15.txt", "r") as f:
-        return
-
-
-if __name__ == "__main__":
-    print(f"Part 1: {part_1()}")
-    print(f"Part 2: {part_2()}")
-    print(f"Part 2 (alternate): {part_2_alt()}")
-

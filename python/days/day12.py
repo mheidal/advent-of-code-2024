@@ -114,9 +114,3 @@ def part_2():
     for region, region_area in region_areas.items():
         total += region_area * corner_counts[region]
     return total
-
-
-if __name__ == "__main__":
-    print(f"Part 1: {part_1()}")
-    print(f"Part 2: {part_2()}")
-

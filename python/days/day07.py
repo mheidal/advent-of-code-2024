@@ -66,10 +66,3 @@ def part_2_alt():
         lambda a, b: a * b,
         lambda a, b: int(str(a) + str(b))
     ])
-
-
-
-if __name__ == "__main__":
-    print(f"Part 1: {part_1()}")
-    print(f"Part 2: {part_2()}")
-

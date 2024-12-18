@@ -92,9 +92,3 @@ def part_2():
                 continue
             pos += face
         return len(placements)
-
-
-if __name__ == "__main__":
-    print(f"Part 1: {part_1()}")
-    print(f"Part 2: {part_2()}")
-

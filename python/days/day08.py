@@ -95,11 +95,3 @@ def part_2_alt():
                     antinodes.add(point)
                     point += minimized_integer_vector_along_angle
         return len(antinodes)
-
-
-if __name__ == "__main__":
-    print(f"Part 1: {part_1()}")
-    print(f"Part 1 (alternate): {part_1_alt()}")
-    print(f"Part 2: {part_2()}")
-    print(f"Part 2 (alternate): {part_2_alt()}")
-

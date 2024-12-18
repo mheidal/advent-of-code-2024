@@ -65,15 +65,3 @@ def part_2():
                         if ((ul == "M" and dr == "S") or (ul == "S" and dr == "M")) and ((ur == "M" and dl == "S") or (ur == "S" and dl == "M")):
                             total += 1
         return total
-
-
-
-def part_2_alt():
-    with open("inputs/day04.txt", "r") as f:
-        return
-
-
-if __name__ == "__main__":
-    print(f"Part 1: {part_1()}")
-    print(f"Part 2: {part_2()}")
-

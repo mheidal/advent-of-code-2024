@@ -69,9 +69,3 @@ def part_2():
     print(s)
 
     return steps
-
-
-if __name__ == "__main__":
-    print(f"Part 1: {part_1()}")
-    print(f"Part 2: {part_2()}")
-

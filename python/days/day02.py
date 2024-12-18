@@ -45,9 +45,3 @@ def part_2():
             if any_safe:
                 total += 1
         return total
-
-
-if __name__ == "__main__":
-    print(f"Part 1: {part_1()}")
-    print(f"Part 2: {part_2()}")
-
