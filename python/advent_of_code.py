@@ -22,7 +22,7 @@ class RunType(Enum):
 
 def main():
     run_type: RunType = RunType.SPECIFIC
-    specific = 17
+    specific = 18
     up_to = 1
     timed = True
     should_print_answers = True
@@ -102,4 +102,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-    # alt()
