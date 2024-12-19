@@ -223,26 +223,26 @@ class Directions:
 
 
 GridIndex = Cell | tuple[int, int]
+GridItem = str | int
 
 class Grid:
     
-    grid: list[list[str]]
+    grid: list[list[GridItem]]
     height: int
     width: int
 
-    def __init__(self, s: str):
+    def __init__(self, data: str | list[list[GridItem]]):
         self.grid = []
-        height = 0
-        width = 0
-        for r, row in enumerate(s.splitlines()):
-            row_item = []
-            for c, col in enumerate(row):
-                height = max(height, r + 1)
-                width = max(width, c + 1)
-                row_item.append(col)
-            self.grid.append(row_item)
-        self.height = height
-        self.width = width
+        if isinstance(data, str):
+            for row in data.splitlines():
+                row_item = []
+                for col in row:
+                    row_item.append(col)
+                self.grid.append(row_item)
+        elif isinstance(data, list):
+            self.grid = data
+        self.height = len(self.grid)
+        self.width = len(self.grid[0]) if self.height > 0 else 0
 
     def __getitem__(self, index: GridIndex):
         """Tuples are (row, col) or (y, x)"""

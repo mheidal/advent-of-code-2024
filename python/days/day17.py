@@ -14,8 +14,7 @@ def run_computer(instructions: list[int], registers: tuple[int, int, int], *, al
             val = b
         elif operand == 6:
             val = c
-        else:
-            raise ValueError(f"Invalid operation, operand pair: {operation, operand}")
+        # val is not set if operation == 4
 
         jumped = False
         match operation:
