@@ -151,6 +151,15 @@ class Cell:
             return cls(*value)
         raise TypeError(f"Cannot convert {type(value)} to Cell")
 
+    def rotate_left(self) -> Self:
+        return Direction(+1 * self.x, -1 * self.y)
+
+    def rotate_right(self) -> Self:
+        return Direction(-1 * self.x, +1 * self.y)
+
+    def manhattan(self, other: Self):
+        return abs(self.x - other.x) + abs(self.y - other.y)
+
     @property
     def y(self):
         return self.row
@@ -181,12 +190,6 @@ class Cell:
         if not isinstance(other, int):
             raise ValueError(f"Invalid coefficient: {other}")
         return Cell(self.row * other, self.col * other)
-
-    def rotate_left(self) -> Self:
-        return Direction(+1 * self.x, -1 * self.y)
-
-    def rotate_right(self) -> Self:
-        return Direction(-1 * self.x, +1 * self.y)
 
 Direction: TypeAlias = Cell
 

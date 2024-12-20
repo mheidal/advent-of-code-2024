@@ -1,4 +1,4 @@
-from functools import lru_cache
+from functools import cache
 
 
 def part_1():
@@ -32,7 +32,7 @@ def part_2():
     towels = towels.split(", ")
     designs = designs.splitlines()
 
-    @lru_cache(maxsize=None)
+    @cache
     def recursively_build_design(design: str, start: int = 0):
         if start == len(design):
             return 1
