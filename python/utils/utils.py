@@ -157,8 +157,9 @@ class Cell:
     def rotate_right(self) -> Self:
         return Direction(-1 * self.x, +1 * self.y)
 
-    def manhattan(self, other: Self):
+    def manhattan(self, other: Self) -> int:
         return abs(self.x - other.x) + abs(self.y - other.y)
+    
 
     @property
     def y(self):
@@ -223,6 +224,19 @@ class Directions:
             Directions.d,
             Directions.dr,
         ]
+    
+    def represent_direction(cell: Cell) -> str:
+            match cell:
+                case Directions.u:
+                    return "^"
+                case Directions.r:
+                    return ">"
+                case Directions.d:
+                    return "v"
+                case Directions.l:
+                    return "<"
+                case _:
+                    raise ValueError(f"Invalid cell for direction-matching: {cell}")
 
 
 GridIndex = Cell | tuple[int, int]
