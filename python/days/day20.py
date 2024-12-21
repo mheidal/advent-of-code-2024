@@ -73,10 +73,12 @@ def find_number_of_shortcuts_above_threshold(max_shortcut_length: int):
     tile_order.append(end)
     tile_distances = {tile: i for i, tile in enumerate(tile_order)}
     shortcut_lengths = Counter()
-    for i, shortcut_start in enumerate(tile_order):
-        for shortcut_end in tile_order[i+1:]:
-            if (tiles_phased := shortcut_start.manhattan(shortcut_end)) <= max_shortcut_length:
-                if tiles_phased < (long_ways_length := (tile_distances[shortcut_end] - tile_distances[shortcut_start])):
+    for shortcut_start in tile_order:
+        for shortcut_end in utils.full_manhattan_disk(shortcut_start, max_shortcut_length):
+            if shortcut_end in tile_distances:
+                tiles_phased = shortcut_start.manhattan(shortcut_end)
+                long_ways_length = (tile_distances[shortcut_end] - tile_distances[shortcut_start])
+                if tiles_phased < long_ways_length:
                     shortcut_lengths[long_ways_length - tiles_phased] += 1
 
     total = 0

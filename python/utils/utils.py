@@ -252,12 +252,12 @@ class Grid:
         cell = Cell.convert(index)
         return self.grid[cell.row][cell.col]
 
-    def __setitem__(self, index: GridIndex, value: str):
+    def __setitem__(self, index: GridIndex, value: GridItem):
         """Tuples are (row, col), i.e. (y, x)"""
         cell = Cell.convert(index)
         self.grid[cell.row][cell.col] = value
 
-    def __iter__(self) -> Iterator[tuple[Cell, str]]:
+    def __iter__(self) -> Iterator[tuple[Cell, GridItem]]:
         for r, row in enumerate(self.grid):
             for c, col in enumerate(row):
                 coord = Cell(r, c)
@@ -296,7 +296,25 @@ class Grid:
     def cell_is_within_grid(self, index: Cell) -> bool:
         return (0 <= index.row < self.height and 0 <= index.col < self.width)
 
-    def coord_of_first_occurrance(self, value: str) -> Cell:
+    def coord_of_first_occurrance(self, value: GridItem) -> Cell:
         for cell, v in self:
             if v == value:
                 return cell
+
+
+def manhattan_radius(index: Cell, radius: int) -> Iterator[Cell]:
+    generated = set()
+    for a in range(radius+1):
+        b = radius - a
+        for row, col in [(-a, -b), (-a, +b), (+a, -b), (+a, +b)]:
+            cell = Cell(index.row + row, index.col + col)
+            if cell not in generated:
+                generated.add(cell)
+                yield cell
+
+
+def full_manhattan_disk(index: Cell, radius: int) -> Iterator[Cell]:
+    for r in range(1, radius+1):
+        for cell in manhattan_radius(index, r):
+            yield cell
+
