@@ -29,16 +29,18 @@ def get_input_sequences_for_motion(start: str, target: str, keypad: Grid) -> tup
 
 def solve(num_robots_on_directional_keypads: int) -> int:
     with open("inputs/day21.txt", "r") as f:
-        target_sequences = [[c for c in line] for line in f.read().splitlines()]
+        target_sequences = f.read().splitlines()
     numeric_keypad = Grid("789\n456\n123\nX0A")
     directional_keypad = Grid("X^A\n<v>")
 
     @cache
-    def recursively_find_shortest_top_level_sequence_sz(sequence: tuple[str, ...], depth: int, is_initial_call: bool = True) -> int:
-        if is_initial_call: keypad = numeric_keypad
-        else: keypad = directional_keypad
+    def recursively_find_shortest_top_level_sequence_sz(
+        sequence: tuple[str, ...],
+        depth: int = num_robots_on_directional_keypads,
+        keypad: Grid = numeric_keypad
+    ) -> int:
 
-        modified_sequence = ["A"] + list(sequence)
+        modified_sequence = ("A",) + sequence
         top_level_sequence_sz = 0
         for i in range(1, len(modified_sequence)):
             inherited_top_level_sequences = []
@@ -51,15 +53,19 @@ def solve(num_robots_on_directional_keypads: int) -> int:
                 top_level_sequence_sz += len(next_keypad_up_inputs[0])
             else:
                 for next_keypad_input_sequence in next_keypad_up_inputs:
-                    inherited_top_level_sequences.append(recursively_find_shortest_top_level_sequence_sz(next_keypad_input_sequence, depth - 1, False))
+                    inherited_top_level_sequences.append(recursively_find_shortest_top_level_sequence_sz(
+                        next_keypad_input_sequence,
+                        depth - 1,
+                        directional_keypad
+                    ))
                 top_level_sequence_sz += min(inherited_top_level_sequences)
 
         return top_level_sequence_sz
 
     total = 0
     for target_sequence in target_sequences:
-        full_top_level_seq = recursively_find_shortest_top_level_sequence_sz(tuple(target_sequence), num_robots_on_directional_keypads)
-        total += full_top_level_seq * int("".join(c for c in target_sequence[:-1]))
+        top_level_input_sequence_length = recursively_find_shortest_top_level_sequence_sz(tuple(target_sequence))
+        total += top_level_input_sequence_length * int(target_sequence[:-1])
     return total
 
 
