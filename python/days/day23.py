@@ -24,12 +24,13 @@ def part_1():
     seen_cliques = set()
     for a, neighbors in graph.items():
         for b, c in itertools.combinations(neighbors, 2):
-            if is_clique(graph, [a, b, c]):
-                clique = frozenset([a, b, c])
-                if clique not in seen_cliques:
-                    seen_cliques.add(clique)
-                    if any(computer[0] == 't' for computer in (a, b, c)):
-                        total += 1
+            clique = frozenset([a, b, c])
+            if clique in seen_cliques:
+                continue
+            seen_cliques.add(clique)
+            if any(computer[0] == 't' for computer in clique):
+                if is_clique(graph, clique):
+                    total += 1
     return total
 
 
@@ -54,7 +55,7 @@ def part_2():
                 neighbor_subsets.append(combination)
         for subset in neighbor_subsets:
             possible_clique = [computer] + list(subset)
-            if len(possible_clique) <= len(biggest_clique): # possible if we've found a click earlier for this computer
+            if len(possible_clique) <= len(biggest_clique): # possible if we've found a clique earlier for this computer
                 continue
             elif is_clique(graph, possible_clique):
                 biggest_clique = possible_clique
