@@ -42,13 +42,17 @@ def part_1_alt():
         text = f.read()
     return
 
-@dataclass
 class Equation:
     a: str
     op: str
     b: str
-    _arrow: str
     ret: str
+
+    def __init__(self, a, op, b, ret):
+        self.a = a
+        self.op = op
+        self.b = b
+        self.ret = ret
 
     def __hash__(self):
         return hash((self.a, self.op, self.b, self.ret))

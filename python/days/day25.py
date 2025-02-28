@@ -19,3 +19,6 @@ def part_1():
             if all(lock[i] + key[i] <= 7 for i in range(5)):
                 total += 1
     return total
+
+def part_2():
+    return
